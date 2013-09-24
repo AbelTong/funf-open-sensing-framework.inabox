@@ -23,9 +23,6 @@
  */
 package funfinabox.app;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -40,7 +37,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -51,19 +47,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import edu.mit.media.funf.FunfManager;
 import edu.mit.media.funf.Launcher;
-import edu.mit.media.funf.config.RuntimeTypeAdapterFactory;
 import edu.mit.media.funf.pipeline.BasicPipeline;
 import edu.mit.media.funf.pipeline.Pipeline;
-import edu.mit.media.funf.probe.Probe.DisplayName;
-import edu.mit.media.funf.util.LogUtil;
-import edu.mit.media.funf.util.StringUtil;
 import funfinabox.__ID__.R;
 
 
@@ -148,6 +139,7 @@ public class Info extends Activity
     
     private void reloadProbeList() {
       // Load probe list view from config
+      /*
       if (pipeline != null && pipeline instanceof BasicPipeline) {
         List<String> names = new ArrayList<String>();
         for (JsonElement el : ((BasicPipeline)pipeline).getDataRequests()) {
@@ -175,7 +167,7 @@ public class Info extends Activity
       } else {
         ((TextView)findViewById(R.id.probe_list)).setText("Unknown...");
       }
-      
+      */
     }
 	
     /** Called when the activity is first created. */

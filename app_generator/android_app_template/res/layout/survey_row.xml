@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_selector"
+    android:orientation="horizontal"
+    android:padding="5dip" >
+    <!-- ListRow Left side Thumbnail image -->
+    <LinearLayout
+        android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dip"
+        android:padding="3dip" >
+        <ImageView
+            android:id="@+id/list_image"
+            android:contentDescription="Funf"
+            android:layout_width="60dip"
+            android:layout_height="60dip"
+            android:src="@drawable/funf_logo_bot" />
+    </LinearLayout>
+    <!-- Rightend Arrow -->
+    <ImageView
+        android:id="@+id/ArrowImageView"
+        android:contentDescription="Funf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/arrow" />
+    <!-- Survey Name -->
+    <TextView
+        android:id="@+id/Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="75dip"
+        android:layout_centerVertical="true"
+        android:paddingBottom ="10dip"
+        android:textColor="#040404"
+        android:textSize="25dip"
+        android:textStyle="bold"
+        android:typeface="sans" />
+    <!-- Survey Description -->
+    <TextView
+        android:id="@+id/Description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Name"
+        android:layout_alignLeft="@+id/Name"
+        android:paddingTop="5dip"
+        android:layout_centerHorizontal="true"
+        android:textColor="#343434"
+        android:textSize="15dip" />
+    <!--  Survey URL -->
+    <TextView 
+        android:id="@+id/Url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dip"
+        android:layout_alignTop="@+id/Name"
+        android:layout_toLeftOf="@+id/ArrowImageView" 
+        android:text="Something here..." 
+        android:textSize="30dip"/>
+</RelativeLayout>

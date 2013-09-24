@@ -27,7 +27,7 @@ $ python manage.py deploy
 
 To upload the app-template to Amazon S3:
 $ pip install boto
-$ export AWS_ACCESS_KEY_ID=<Your AWS Access Key ID>
+$ export AWS_ACCESS_KEY_ID=<Your AWS Access Key>
 $ export AWS_SECRET_ACCESS_KEY=<Your AWS Secret Access Key>
 $ python deploy_S3.py
 

@@ -244,6 +244,41 @@
 	        <label for="id_UserStudyNotificationProbe_notifyMessage">Notification Message:</label>
 	        {{ form.UserStudyNotificationProbe_notifyMessage }}
 	    </div>
+	    <h3>Surveys</h3>
+	    <hr />
+	    {{ surveys.management_form }}
+    	{% for form in surveys.forms %}
+    	<div class="item">
+      		<div class="fieldWrapper">
+	        	{{ form.SurveyProbe.errors }}
+	        	{{ form.SurveyProbe_url.errors }}
+	        	{{ form.SurveyProbe }} <label for="SurveyProbe_freq"><a target="_blank" href="http://code.google.com/p/funf-open-sensing-framework/wiki">User Survey</a> every </label>{{ form.SurveyProbe_freq.errors }}{{ form.SurveyProbe_freq }} seconds with {{ form.SurveyProbe_url }}
+	    	</div>
+		    <br>
+		    <div class="fieldWrapper">
+		        {{ form.SurveyProbe_name.errors }}
+		        <label for="id_SurveyProbe_name">Name:</label>
+		        {{ form.SurveyProbe_name }}
+		    </div>
+		    <div class="fieldWrapper">
+		        {{ form.SurveyProbe_description.errors }}
+		        <label for="id_SurveyProbe_description">Description:</label>
+		        {{ form.SurveyProbe_description }}
+		    </div>
+		    <div class="fieldWrapper">
+		        {{ form.SurveyProbe_start.errors }}
+		        <label for="id_SurveyProbe_start">Start Date/Time:</label>
+		        {{ form.SurveyProbe_start }}
+		    </div>
+		    <div class="fieldWrapper">
+		        {{ form.SurveyProbe_stop.errors }}
+		        <label for="id_SurveyProbe_stop">Stop Date/Time:</label>
+		        {{ form.SurveyProbe_stop }}
+		    </div>
+      		<p style=""><a class="delete" href="#">Delete this survey</a></p>
+    	</div>
+    	{% endfor %}
+    	<p><a id="add" href="#">Add another survey</a></p>
 	    <h3>Terms and Conditions</h3>
 	    <hr />
 	    <div class="fieldWrapper">

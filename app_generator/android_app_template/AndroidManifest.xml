@@ -66,6 +66,7 @@
         	</intent-filter>
         </receiver>
         <activity android:name="edu.mit.media.funf.probe.external.WebViewActivity"></activity>
+        <activity android:name="edu.mit.media.funf.probe.external.SurveyInboxActivity"></activity>
     </application>
     
 </manifest> 

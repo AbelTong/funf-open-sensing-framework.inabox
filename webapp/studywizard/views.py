@@ -20,13 +20,14 @@
 # License along with Funf. If not, see <http://www.gnu.org/licenses/>.
 # 
 # Create your views here.
-from dropbox import client, rest, session
+from dropbox import client, session
 import os
 import re
 from django.shortcuts import redirect, render
 from django.core.urlresolvers import reverse
+from django.forms.formsets import formset_factory, BaseFormSet
 from models import Stats
-from forms import CreateAppForm
+from forms import CreateAppForm, SurveyForm
 import time, datetime
 import json
 
@@ -98,10 +99,18 @@ def app_create(request):
         except:
             return redirect('home')
     
+    class RequiredFormSet(BaseFormSet):
+        def __init__(self, *args, **kwargs):
+            super(RequiredFormSet, self).__init__(*args, **kwargs)
+            for form in self.forms:
+                form.empty_permitted = False
+    SurveyFormSet = formset_factory(SurveyForm, max_num=10, formset=RequiredFormSet)
     #If form submitted
     if request.method == 'POST':
         form = CreateAppForm(request.POST) # A form bound to the POST data
-        if form.is_valid():
+        surveys = SurveyFormSet(request.POST)
+        
+        if form.is_valid() and surveys.is_valid():
             # Process the data in form.cleaned_data
             app_form_vars = {}
             app_registration_vars = {}
@@ -134,7 +143,24 @@ def app_create(request):
                         app_probe_vars[field_name]['DURATION'] = int(form.cleaned_data[field_name + '_duration'])
                     except:
                         pass
-
+                    
+            #Get Survey Form values
+            SurveyProbeName = 'SurveyProbe'
+            survey_index = 0
+            if surveys.cleaned_data[0]['SurveyProbe']:
+                for survey in surveys.cleaned_data:
+                        SurveyName = SurveyProbeName+'_'+str(survey_index)
+                        app_probe_vars[SurveyName] = {}
+                        
+                        app_probe_vars[SurveyName]['NAME'] = survey[SurveyProbeName + '_name']
+                        app_probe_vars[SurveyName]['DESCRIPTION'] = survey[SurveyProbeName + '_description']
+                        app_probe_vars[SurveyName]['URL'] = survey[SurveyProbeName + '_url']
+                        app_probe_vars[SurveyName]['START'] = int( time.mktime(survey[SurveyProbeName + '_start'].timetuple()) )
+                        app_probe_vars[SurveyName]['STOP'] = survey[SurveyProbeName + '_stop'].strftime("%d-%m-%Y %H:%M:%S")
+                        app_probe_vars[SurveyName]['PERIOD'] = int(survey[SurveyProbeName + '_freq'])
+                        
+                        survey_index += 1
+            
             #Create json config for app creation
             config_dict = create_app_config(app_form_vars, app_probe_vars)
             config_json = json.dumps(config_dict)
@@ -153,8 +179,9 @@ def app_create(request):
             return redirect(app_thanks) # Redirect after POST
     else:
         form = CreateAppForm() # An unbound form
+        surveys = SurveyFormSet()
 
-    return render(request, 'app_create.html', {'form': form})
+    return render(request, 'app_create.html', {'form': form, 'surveys':surveys})
 
 
     #folder_metadata = client.metadata('/')
@@ -193,12 +220,15 @@ def create_app_config(app_form_vars, app_probe_vars):
     
     
     for key in app_probe_vars.keys():
-        if key == 'UserStudyNotificationProbe': 
-            probe_config = {'@type': 'edu.mit.media.funf.probe.external.' + key}
+        if key == 'UserStudyNotificationProbe' or key.startswith('SurveyProbe'): 
+            probe_config = {'@type': 'edu.mit.media.funf.probe.external.' + key.split('_')[0]}
         else: 
             probe_config = {'@type': 'edu.mit.media.funf.probe.builtin.' + key}
         schedule = {}
         try:
+            # Add the extra parameters for SurveyProbe
+            if key.startswith('SurveyProbe'):
+                if app_probe_vars[key]['START']: schedule['offset'] = app_probe_vars[key]['START']
             schedule['interval'] = app_probe_vars[key]['PERIOD']
             schedule['duration'] = app_probe_vars[key]['DURATION']
         except:
@@ -217,8 +247,15 @@ def create_app_config(app_form_vars, app_probe_vars):
             if app_probe_vars[key]['TITLE']: probe_config['notifyTitle'] = app_probe_vars[key]['TITLE']
             if app_probe_vars[key]['MESSAGE']: probe_config['notifyMessage'] = app_probe_vars[key]['MESSAGE']
             
+        # Add the extra parameters for SurveyProbe
+        if key.startswith('SurveyProbe'):
+            if app_probe_vars[key]['NAME']: probe_config['name'] = app_probe_vars[key]['NAME']
+            if app_probe_vars[key]['DESCRIPTION']: probe_config['description'] = app_probe_vars[key]['DESCRIPTION']
+            if app_probe_vars[key]['URL']: probe_config['url'] = app_probe_vars[key]['URL']
+            if app_probe_vars[key]['STOP']: probe_config['endtimestamp'] = app_probe_vars[key]['STOP']
+            
         config_dict['data'].append(probe_config)
-
+        
     return config_dict
 
 def test(request):

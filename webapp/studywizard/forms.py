@@ -177,3 +177,14 @@ class CreateAppForm(forms.Form):
             raise forms.ValidationError('This field is required!')
         else:
             return data['VideoCaptureProbe_captureRate']
+        
+        
+class SurveyForm(forms.Form):
+    #Survey
+    SurveyProbe = forms.BooleanField(required=False)
+    SurveyProbe_name = forms.CharField(max_length=64,required=False)
+    SurveyProbe_description = forms.CharField(max_length=200,required=False)
+    SurveyProbe_url = forms.URLField(required=False)
+    SurveyProbe_start = forms.DateTimeField(input_formats=['%d-%m-%Y %H:%M:%S'], required=False)
+    SurveyProbe_stop = forms.DateTimeField(input_formats=['%d-%m-%Y %H:%M:%S'], required=False)
+    SurveyProbe_freq = forms.DecimalField(required=False, widget=forms.TextInput(attrs={'size': '5', 'class': 'form_freq',}))
